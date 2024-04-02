@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 // Replace './models/WeatherData' with the actual path to your model
-const WeatherData = require('./models/WeatherData');
+const WeatherData = require("./models/WeatherData");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -13,50 +13,55 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
-// Middleware for API Key validation
 const validateApiKey = (req, res, next) => {
-  const apiKey = req.header('x-api-key');
+  const apiKey = req.header("x-api-key");
 
-  const validApiKeys = ['7867632hjjhghj23hghkjh2j3hk2h3kjh2kj3h'];
+  const validApiKeys = ["7867632hjjhghj23hghkjh2j3hk2h3kjh2kj3h"];
 
   if (!apiKey || !validApiKeys.includes(apiKey)) {
-    return res.status(401).send('Unauthorized: Missing or invalid API key');
+    return res.status(401).send("Unauthorized: Missing or invalid API key");
   }
 
   next();
 };
 
-mongoose.connect('mongodb+srv://younus:dCP1SUixMmQjaq13@cluster0.7fs8z.mongodb.net/weatherDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose
+  .connect(
+    "mongodb+srv://younus:dCP1SUixMmQjaq13@cluster0.7fs8z.mongodb.net/weatherDB",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
 
-.then(() => console.log('Connected to MongoDB...'))
-.catch(err => console.error('Could not connect to MongoDB...', err));
+  .then(() => console.log("Connected to MongoDB..."))
+  .catch((err) => console.error("Could not connect to MongoDB...", err));
 
 const swaggerOptions = {
   swaggerDefinition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Weather API',
-      version: '1.0.0',
-      description: 'API for fetching weather data from MongoDB',
+      title: "Weather API",
+      version: "1.0.0",
+      description: "API for fetching weather data from MongoDB",
     },
-    servers: [{
-      url: 'http://localhost:3001',
-      description: 'Development server',
-    }],
+    servers: [
+      {
+        url: "http://localhost:3001",
+        description: "Development server",
+      },
+    ],
   },
-  apis: ['./server.js', './models/*.js'], // Make sure this path points to your API documentation
+  apis: ["./server.js", "./models/*.js"], 
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Basic route for API status
-app.get('/', (req, res) => {
-  res.send('Weather API is running...');
+app.get("/", (req, res) => {
+  res.send("Weather API is running...");
 });
 
 /**
@@ -99,7 +104,6 @@ app.get('/', (req, res) => {
  *           description: The timestamp when the data was recorded, in ISO 8601 format
  */
 
-
 /**
  * @swagger
  * components:
@@ -110,13 +114,13 @@ app.get('/', (req, res) => {
  *       name: x-api-key  # Name of the header to be used
  */
 
-
-app.get('/api/weather', validateApiKey, async (req, res) => {
+app.get("/api/weather", validateApiKey, async (req, res) => {
   try {
-    const latestWeatherData = await WeatherData
-      .find()
+    const latestWeatherData = await WeatherData.find()
       .sort({ timestamp: -1 })
       .limit(25);
+
+      console.log("latestWeatherData->",latestWeatherData);
     res.json(latestWeatherData);
   } catch (error) {
     console.error("Failed to fetch weather data:", error);

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const weatherDataSchema = new mongoose.Schema({
   district: String,
@@ -7,9 +7,9 @@ const weatherDataSchema = new mongoose.Schema({
   temperature: String,
   humidity: String,
   airPressure: String,
-  timestamp: { type: Date, default: Date.now } // To track when the data was recorded
+  timestamp: { type: Date, default: Date.now }, // To track when the data was recorded
 });
 
-const WeatherData = mongoose.model('WeatherData', weatherDataSchema);
+const WeatherData = mongoose.model("WeatherData", weatherDataSchema);
 
 module.exports = WeatherData;

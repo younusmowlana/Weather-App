@@ -7,7 +7,7 @@ const weatherDataSchema = new mongoose.Schema({
   temperature: String,
   humidity: String,
   airPressure: String,
-  timestamp: { type: Date, default: Date.now }, // To track when the data was recorded
+  timestamp: { type: Date, default: Date.now }, 
 });
 
 const WeatherData = mongoose.model("WeatherData", weatherDataSchema);
